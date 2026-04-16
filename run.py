@@ -41,164 +41,214 @@ logger = logging.getLogger("logipulse")
 
 DEMO_ANALYSIS = {
     "date": datetime.now().strftime("%Y-%m-%d"),
-    "market_pulse": {
-        "summary": (
-            "今日全球空运市场整体偏强运行。亚欧航线运价继续小幅上涨，"
-            "主要受益于跨境电商旺季备货需求拉动。北美航线保持稳定，"
-            "但部分航司已开始释放五月GRI信号。中东转运枢纽吞吐量持续增长，"
-            "迪拜和多哈货站处理量同比上升12%。需关注红海局势对亚欧海运转空运的溢出效应。"
-        ),
-        "sentiment": "bullish",
-        "key_signals": [
+    "layer1_input": {
+        "headline": "中东航线运力收缩，亚欧价格重估开始",
+        "supply_signals": [
             {
-                "signal": "亚欧空运运价周环比上涨 3-5%",
-                "source": "TAC Index",
-                "impact": "货代可适当锁定舱位，避免GRI后被动提价",
-                "url": "https://www.tacindex.com",
+                "signal": "A4E呼吁欧盟采取临时措施应对中东冲突，多家航司调整中东绕飞路线，有效运力下降约8%",
+                "source": "Air Cargo News",
+                "url": "https://www.aircargonews.net",
+                "severity": "high",
             },
             {
-                "signal": "IATA 3月全球货运需求同比增长 8.2%",
-                "source": "IATA",
-                "impact": "行业景气度持续，利好空运货量增长",
-                "url": "https://www.iata.org",
+                "signal": "法兰克福机场3月货量逆势增长0.4%至185,500吨，preighters重新投入中东运营",
+                "source": "Air Cargo News",
+                "url": "https://www.aircargonews.net",
+                "severity": "medium",
             },
             {
-                "signal": "Flexport 宣布推出 AI 自动报价系统",
+                "signal": "National Airlines接收首架777F货机，中美远程运力将增加",
+                "source": "Air Cargo News",
+                "url": "https://www.aircargonews.net",
+                "severity": "medium",
+            },
+        ],
+        "demand_signals": [
+            {
+                "signal": "跨境电商旺季备货需求提前释放，Temu/SHEIN包裹量周环比增长15%",
                 "source": "FreightWaves",
-                "impact": "数字化竞争加剧，传统货代需加速工具建设",
                 "url": "https://www.freightwaves.com",
+                "severity": "high",
+            },
+            {
+                "signal": "Dachser警告地缘政治推动中德海空运费率大幅上涨，客户开始锁舱",
+                "source": "The Loadstar",
+                "url": "https://theloadstar.com",
+                "severity": "high",
+            },
+        ],
+        "rule_signals": [
+            {
+                "signal": "美国CBP关税退税门户4月20日上线，约1270亿美元退税待处理",
+                "source": "US CBP",
+                "url": "https://www.cbp.gov/newsroom",
+                "severity": "high",
+                "deadline": "2026-04-20",
+            },
+            {
+                "signal": "美国CBP更新锂电池空运安检要求，旧版UN38.3报告5月1日后不再接受",
+                "source": "US CBP",
+                "url": "https://www.cbp.gov",
+                "severity": "high",
+                "deadline": "2026-05-01",
+            },
+            {
+                "signal": "EU CBAM 首个证书价格发布，碳边境调节机制进入实质运行",
+                "source": "EU DG TAXUD",
+                "url": "https://taxation-customs.ec.europa.eu",
+                "severity": "medium",
+                "deadline": "2026-04-30",
             },
         ],
     },
-    "rate_trends": {
-        "summary": "空运运价整体呈现分化走势：亚欧偏强，跨太平洋稳定，区域内航线竞争加剧。",
-        "highlights": [
+    "layer2_explain": {
+        "core_logic": (
+            "今天的核心逻辑链：中东冲突持续 → 航司绕飞增加燃油成本+飞行时间 → "
+            "亚欧有效运力下降约8% → 稀缺性上升 → 运价进入重估周期。"
+            "同时，电商旺季备货提前释放需求，供需两端同时收紧。"
+            "关键判断：这不是短期波动，是结构性的运力收缩。"
+            "客户会问「为什么涨」——你的回答不是「因为旺季」，"
+            "而是「因为能飞的路线在减少，确定性在变贵」。"
+        ),
+        "certainty_index": "volatile",
+        "causal_chains": [
             {
-                "route": "上海→法兰克福 (PVG-FRA)",
-                "direction": "up",
-                "detail": "普货 ¥32-35/kg，周涨 ¥1.5，电商旺季效应",
-                "source": "TAC Index",
+                "cause": "中东地缘冲突升级",
+                "effect": "航司绕飞增加2-3小时航程，部分中东中转航线暂停",
+                "implication": "亚欧直飞舱位稀缺，溢价空间扩大¥3-5/kg",
             },
             {
-                "route": "上海→洛杉矶 (PVG-LAX)",
-                "direction": "stable",
-                "detail": "普货 ¥28-31/kg，持平，关注5月GRI",
-                "source": "WorldACD",
+                "cause": "电商备货需求提前释放",
+                "effect": "Temu/SHEIN包裹量激增，占据大量腹舱运力",
+                "implication": "普货被电商挤占舱位，大件客户需提前2周预订",
             },
             {
-                "route": "香港→迪拜 (HKG-DXB)",
-                "direction": "up",
-                "detail": "中东转运需求旺盛，涨幅约 4%",
-                "source": "Clive Data",
+                "cause": "美国关税退税门户即将上线",
+                "effect": "进口商现金流改善，可能增加补货采购",
+                "implication": "中美线5月可能出现一波补货需求，提前锁价有利",
             },
         ],
     },
-    "fuel_update": {
-        "summary": "航空煤油价格本周小幅回落 1.2%，布伦特原油在 $82-84/桶区间震荡。",
-        "highlights": [
-            "新加坡航煤现货价 $96.5/桶，周跌 $1.2",
-            "IATA 燃油附加费标准本月不变，下月可能下调",
-            "中东地缘风险仍是油价最大不确定性因素",
+    "layer3_translate": {
+        "by_route": [
+            {
+                "route": "PVG-FRA（上海→法兰克福）",
+                "status": "hot",
+                "rate_direction": "up",
+                "detail": "中东绕飞叠加电商备货，本周涨¥1.5-2/kg，预计持续到5月中旬",
+                "forwarder_talk": "张总，欧洲线这周又涨了，不是我们在涨价——是中东那边绕飞导致能飞的路线在减少。建议您这批货这周确认，下周可能还要调。",
+            },
+            {
+                "route": "PVG-LAX（上海→洛杉矶）",
+                "status": "stable",
+                "rate_direction": "stable",
+                "detail": "暂时平稳，但National Airlines新增777F运力尚未消化，关注5月GRI",
+                "forwarder_talk": "王总，美线目前还算稳定，但5月有GRI预期。如果有5月的货，建议这两周先把价格锁了。",
+            },
+            {
+                "route": "PVG-DXB（上海→迪拜）",
+                "status": "volatile",
+                "rate_direction": "up",
+                "detail": "中东局势导致部分航司暂停或减频，运力紧张，涨幅约4-6%",
+                "forwarder_talk": "李总，中东线现在很不稳定，不是价格问题——是能不能走的问题。我帮你盯着舱位，有了第一时间通知你。",
+            },
+        ],
+        "by_product": [
+            {
+                "product": "超大件/项目货",
+                "impact": "中东绕飞导致全货机舱位更紧，超大件排期拉长，建议提前3周预订",
+                "opportunity_or_risk": "opportunity",
+            },
+            {
+                "product": "危险品(DG)",
+                "impact": "锂电池新规5月1日生效，DG客户需紧急更新UN38.3报告",
+                "opportunity_or_risk": "risk",
+            },
+            {
+                "product": "电商小包",
+                "impact": "Temu/SHEIN备货挤占腹舱，电商渠道价格竞争白热化",
+                "opportunity_or_risk": "neutral",
+            },
+            {
+                "product": "返修件/RMA",
+                "impact": "美国关税退税门户上线后，返修件流程可能简化，关注政策细节",
+                "opportunity_or_risk": "opportunity",
+            },
+        ],
+        "by_customer": [
+            {
+                "customer_type": "欧洲线大客户（汽车零部件/机械）",
+                "behavior_prediction": "会主动询价，因为他们的德国客户在催货",
+                "your_move": "主动打电话报价，强调\"现在锁舱比下周便宜\"",
+            },
+            {
+                "customer_type": "中东线客户",
+                "behavior_prediction": "会犹豫要不要发，因为不确定性太高",
+                "your_move": "提供替代方案（如转经IST中转），把\"不确定\"变成\"有方案\"",
+            },
+            {
+                "customer_type": "DG/锂电池客户",
+                "behavior_prediction": "大多数还没注意到5月新规",
+                "your_move": "今天就发一条提醒消息，建立\"专业可靠\"的认知",
+            },
         ],
     },
-    "top_stories": [
-        {
-            "title_zh": "IATA：3月全球航空货运需求同比增长8.2%，连续第5个月正增长",
-            "title_en": "IATA: Global Air Cargo Demand Up 8.2% YoY in March, 5th Consecutive Month of Growth",
-            "summary_zh": (
-                "IATA最新数据显示，3月全球航空货运需求（以CTK计）同比增长8.2%，"
-                "超出市场预期。亚太地区贡献最大增量，其中中国出口需求尤为强劲。"
-                "对货代而言，需求持续增长意味着旺季可能提前，建议提前锁定核心航线舱位。"
-            ),
-            "summary_en": (
-                "IATA's latest data shows global air cargo demand (CTK) grew 8.2% YoY in March, "
-                "exceeding market expectations. Asia-Pacific contributed the largest increment, "
-                "with Chinese export demand particularly strong. For forwarders, sustained growth "
-                "suggests peak season may arrive early — consider securing core route capacity now."
-            ),
-            "source": "IATA",
-            "url": "https://www.iata.org/en/iata-repository/publications/economic-reports/",
-            "category": "market_data",
-            "importance": "high",
+    "layer4_action": {
+        "money_moves": [
+            {
+                "opportunity": "亚欧线锁舱套利：本周订5月上旬的FRA舱位，预计下周GRI后可多赚¥2-3/kg",
+                "why_now": "航司5月GRI通知已出，本周是最后窗口",
+                "expected_margin": "较当前报价多¥2-3/kg利润空间",
+            },
+            {
+                "opportunity": "DG客户服务升级：主动帮锂电池客户对接UN38.3报告更新，绑定长期合作",
+                "why_now": "5月1日deadline临近，同行还没反应过来",
+                "expected_margin": "服务溢价 + 客户粘性，长期价值远超单票利润",
+            },
+            {
+                "opportunity": "中东线替代路径方案：为DXB客户设计IST/DOH中转方案，在\"别人说走不了\"的时候你说\"我有办法\"",
+                "why_now": "中东局势不会短期缓解，替代方案需求持续存在",
+                "expected_margin": "复杂路径溢价约15-20%",
+            },
+        ],
+        "pricing_strategy": {
+            "conservative": "亚欧线按当前市场价+¥1/kg报，强调\"本周价格，下周不保\"",
+            "standard": "按当前市场价+¥2/kg报，含下周GRI预期，提供\"本周确认锁价\"优惠",
+            "aggressive": "按下周GRI后价格直接报，客户如果嫌贵就说\"这是下周的价格，我今天可以帮你锁住\"",
+            "rationale": "市场在涨价通道中，报价策略的核心是制造紧迫感——不是让客户觉得便宜，是让客户觉得\"现在不定就更贵\"",
         },
-        {
-            "title_zh": "Flexport 推出 AI 自动报价系统，可在30秒内完成全球空运报价",
-            "title_en": "Flexport Launches AI Auto-Quoting System — Global Air Freight Quotes in 30 Seconds",
-            "summary_zh": (
-                "数字化货代巨头 Flexport 宣布推出基于大模型的自动报价系统，"
-                "集成了全球200+航司实时运价数据。该系统可在30秒内生成包含多方案对比的报价单。"
-                "这一举措将进一步压缩传统货代的报价时间优势，"
-                "国内货代需加速自身数字化工具建设以应对竞争。"
-            ),
-            "summary_en": (
-                "Digital freight giant Flexport unveiled an LLM-powered auto-quoting system "
-                "integrating real-time rates from 200+ carriers globally. The system generates "
-                "multi-option quotes in 30 seconds. This move further compresses the quoting "
-                "advantage of traditional forwarders — domestic forwarders must accelerate "
-                "their digital tool development to stay competitive."
-            ),
-            "source": "FreightWaves",
-            "url": "https://www.freightwaves.com",
-            "category": "tech_innovation",
-            "importance": "high",
-        },
-        {
-            "title_zh": "中国海关总署：4月1日起调整部分商品进出口关税",
-            "title_en": "China Customs: Import/Export Tariff Adjustments Effective April 1",
-            "summary_zh": (
-                "海关总署发布公告，自4月1日起对部分机电产品、化工原料的进出口关税进行调整。"
-                "其中新能源汽车零部件出口退税率提高至16%，锂电池相关产品也有调整。"
-                "这些变化将直接影响相关品类的空运出口量，"
-                "货代应提前通知相关客户并调整操作流程。"
-            ),
-            "summary_en": (
-                "China's General Administration of Customs announced tariff adjustments "
-                "for certain mechanical, electrical, and chemical products effective April 1. "
-                "NEV components export tax rebate increased to 16%, with lithium battery "
-                "products also adjusted. These changes will directly impact air cargo "
-                "volumes for related categories."
-            ),
-            "source": "中国海关总署",
-            "url": "http://www.customs.gov.cn/",
-            "category": "regulatory",
-            "importance": "high",
-        },
-    ],
-    "regulatory_alerts": [
-        {
-            "title": "EU CBAM 碳边境调节机制过渡期报告截止日提醒",
-            "detail": "2026年Q1报告截止日为4月30日，涉及钢铁、铝、水泥等品类出口欧盟的碳排放申报。货代需提醒相关客户准备申报材料。",
-            "region": "欧盟",
-            "urgency": "upcoming",
-        },
-        {
-            "title": "美国 CBP 更新锂电池空运安检要求",
-            "detail": "自5月1日起，所有含锂电池货物空运入境美国需附带新版UN38.3测试报告，旧版将不再接受。",
-            "region": "美国",
-            "urgency": "upcoming",
-        },
-    ],
-    "tech_innovation": [
-        {
-            "title": "cargo.one 新增东南亚5家航司运价对接",
-            "detail": "新增 Bangkok Airways Cargo、Vietnam Airlines Cargo 等5家东南亚航司实时运价，覆盖曼谷、河内、胡志明等枢纽。",
-            "source": "cargo.one",
-        },
-        {
-            "title": "CargoAi 推出 AI 预测工具，准确率达 92%",
-            "detail": "基于历史数据和市场信号预测未来7天运价走势，目前覆盖亚欧、跨太平洋主要航线。",
-            "source": "CargoAi",
-        },
-    ],
-    "action_items": [
-        "亚欧航线运价上行，建议本周锁定5月前两周的核心舱位",
-        "关注美国锂电池新规（5月1日生效），提前通知DG客户更新UN38.3报告",
-        "IATA货量数据持续向好，可适当加大市场开拓力度，特别是电商和新能源品类",
-        "学习 Flexport 的AI报价模式，思考自身报价流程的数字化升级路径",
-    ],
+        "call_list": [
+            {
+                "who": "欧洲线前10大客户",
+                "why": "运价上涨+GRI预期，他们需要提前锁舱",
+                "talking_point": "张总，下周欧洲线有一波GRI，我帮你先把舱位锁了，价格按今天的算。",
+            },
+            {
+                "who": "所有DG/锂电池客户",
+                "why": "5月1日美国新规deadline，大多数人还不知道",
+                "talking_point": "王总，提醒一下，5月1日开始美线锂电池需要新版UN38.3报告，旧版不认了。需要我帮你对接检测机构吗？",
+            },
+            {
+                "who": "中东线有询价未成交的客户",
+                "why": "局势波动=价格在变，之前嫌贵的客户现在可能接受了",
+                "talking_point": "李总，中东线最近运力很紧，但我这边有一个IST中转的方案可以走，您看要不要先锁一个舱位？",
+            },
+        ],
+        "team_brief": (
+            "今天早会三个重点：第一，欧洲线在涨，下周有GRI，今天所有欧洲线报价都加一句"
+            "「本周价格，下周不保」，制造紧迫感。第二，美国锂电池新规5月1日生效，"
+            "今天下午所有DG客户发一条提醒消息，模板我发群里。第三，中东线不要说「走不了」，"
+            "要说「我有替代方案」。客户要的不是最便宜的价格，是确定性——"
+            "谁能给他确定性，他就跟谁走。"
+        ),
+    },
+    "fuel_snapshot": {
+        "summary": "航空煤油价格本周小幅回落1.2%，布伦特原油$82-84/桶区间震荡，中东局势仍是最大变量。",
+        "impact_on_fsc": "本月FSC标准不变，但5月可能因中东风险溢价上调。建议报价时预留FSC调整空间。",
+    },
     "quote_of_the_day": {
-        "text": "在物流行业，信息差正在快速消失。未来赢的不是报价最低的人，是响应最快、判断最准的人。",
-        "source": "Jones · LogiPulse",
+        "text": "客户不是在买运费，是在买「不出事」。谁能给他确定性，他就跟谁走。",
+        "context": "这个市场，不是价格决定成交，是确定性决定成交。",
     },
 }
 

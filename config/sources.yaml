@@ -1,5 +1,6 @@
 # LogiPulse — 国际物流日报信息源配置
-# 每个源包含: name, type(rss/web/api), url, category, language, priority
+# 每个源包含: name, type(rss/web/api/x), url, category, language, priority
+# type: x 表示 X/Twitter 账号，需通过 X API 或 Nitter RSS 采集
 
 # ============================================================
 # 1. 全球头部货代 / Global Head Forwarders
@@ -354,7 +355,7 @@ podcasts:
     priority: low
 
 # ============================================================
-# 8. 航空公司货运 / Airline Cargo (补充源)
+# 8. 航空公司货运 / Airline Cargo
 # ============================================================
 airline_cargo:
   - name: Lufthansa Cargo
@@ -412,7 +413,7 @@ airline_cargo:
     priority: medium
 
 # ============================================================
-# 9. 社交媒体 & 社区 / Social & Community (补充源)
+# 9. 社交媒体 & 社区 / Social & Community
 # ============================================================
 social_community:
   - name: r/logistics (Reddit)
@@ -441,7 +442,7 @@ social_community:
     notes: 需要手动抓取或使用第三方API
 
 # ============================================================
-# 10. 政策 & 监管 / Regulatory & Policy (补充源)
+# 10. 政策 & 监管 / Regulatory & Policy
 # ============================================================
 regulatory:
   - name: US CBP (Customs and Border Protection)
@@ -473,3 +474,138 @@ regulatory:
     type: web
     language: zh
     priority: high
+
+# ============================================================
+# 11. X/Twitter 航线盯盘清单（按航线分组）
+#     type: x — 需通过 nitter RSS 或 X API 采集
+#     handle: X 用户名
+#     route_group: 所属航线分组
+# ============================================================
+
+# --- 总控雷达（必盯 10 个）---
+x_radar:
+  - name: Lufthansa Cargo (X)
+    handle: Lufthansa_Cargo
+    url: https://x.com/Lufthansa_Cargo
+    type: x
+    route_group: radar
+    language: en
+    priority: critical
+
+  - name: Air Cargo News (X)
+    handle: Air_Cargo_News
+    url: https://x.com/Air_Cargo_News
+    type: x
+    route_group: radar
+    language: en
+    priority: critical
+
+  - name: TIACA (X)
+    handle: tiacaorg
+    url: https://x.com/tiacaorg
+    type: x
+    route_group: radar
+    language: en
+    priority: critical
+
+  - name: cargo.one (X)
+    handle: cargo_one_
+    url: https://x.com/cargo_one_
+    type: x
+    route_group: radar
+    language: en
+    priority: critical
+
+  - name: WebCargo (X)
+    handle: WebCargoSL
+    url: https://x.com/WebCargoSL
+    type: x
+    route_group: radar
+    language: en
+    priority: critical
+
+  - name: CargoAi (X)
+    handle: cargoai
+    url: https://x.com/cargoai
+    type: x
+    route_group: radar
+    language: en
+    priority: critical
+
+  - name: Freightos (X)
+    handle: freightos
+    url: https://x.com/freightos
+    type: x
+    route_group: radar
+    language: en
+    priority: critical
+
+  - name: FedEx (X)
+    handle: FedEx
+    url: https://x.com/FedEx
+    type: x
+    route_group: radar
+    language: en
+    priority: high
+
+  - name: UPS (X)
+    handle: UPS
+    url: https://x.com/UPS
+    type: x
+    route_group: radar
+    language: en
+    priority: high
+
+  - name: DHL Express (X)
+    handle: DHLexpress
+    url: https://x.com/DHLexpress
+    type: x
+    route_group: radar
+    language: en
+    priority: high
+
+# --- A. 中欧主干线 PVG/CGO/SZX → FRA/LGG/AMS/CDG/LHR ---
+x_europe:
+  - { name: "KLM Cargo (X)", handle: "KLMCargo", type: x, route_group: europe, language: en, priority: high }
+  - { name: "Air France (X)", handle: "airabordfr", type: x, route_group: europe, language: en, priority: medium }
+  - { name: "IAG Cargo (X)", handle: "IAGCargo", type: x, route_group: europe, language: en, priority: high }
+  - { name: "Cargolux (X)", handle: "Cargolux", type: x, route_group: europe, language: en, priority: high }
+  - { name: "Turkish Cargo (X)", handle: "TurkishCargo", type: x, route_group: europe, language: en, priority: high }
+  - { name: "Swiss WorldCargo (X)", handle: "SwissWorldCargo", type: x, route_group: europe, language: en, priority: medium }
+  - { name: "Finnair Cargo (X)", handle: "FinnairCargo", type: x, route_group: europe, language: en, priority: medium }
+  - { name: "Brussels Airport (X)", handle: "BaborFlight", type: x, route_group: europe, language: en, priority: medium }
+  - { name: "Frankfurt Airport (X)", handle: "Airport_FRA", type: x, route_group: europe, language: en, priority: high }
+  - { name: "Liege Airport (X)", handle: "LiegeAirport", type: x, route_group: europe, language: en, priority: high }
+  - { name: "Schiphol Airport (X)", handle: "Schiphol", type: x, route_group: europe, language: en, priority: high }
+
+# --- B. 中美主干线 PVG/CGO/SZX → LAX/ORD/JFK/MIA/DFW ---
+x_americas:
+  - { name: "Atlas Air (X)", handle: "atlasabordrgo", type: x, route_group: americas, language: en, priority: high }
+  - { name: "Kalitta Air (X)", handle: "KalittaAir", type: x, route_group: americas, language: en, priority: medium }
+  - { name: "Polar Air Cargo (X)", handle: "PolarAirCargo", type: x, route_group: americas, language: en, priority: medium }
+  - { name: "Miami Airport Cargo (X)", handle: "ifaborgo", type: x, route_group: americas, language: en, priority: high }
+  - { name: "LAX Airport (X)", handle: "flyLAXairport", type: x, route_group: americas, language: en, priority: high }
+  - { name: "FreightWaves (X)", handle: "FreightWaves", type: x, route_group: americas, language: en, priority: critical }
+  - { name: "JOC (X)", handle: "JOaborCom", type: x, route_group: americas, language: en, priority: high }
+
+# --- C. 中东/海湾中转 PVG/CGO/SZX → DXB/DOH/AUH/RUH ---
+x_middle_east:
+  - { name: "Qatar Airways (X)", handle: "qatarairways", type: x, route_group: middle_east, language: en, priority: high }
+  - { name: "Emirates (X)", handle: "emirates", type: x, route_group: middle_east, language: en, priority: high }
+  - { name: "Etihad Cargo (X)", handle: "EtihadCargo", type: x, route_group: middle_east, language: en, priority: high }
+  - { name: "Saudia Cargo (X)", handle: "SaudiaCargo", type: x, route_group: middle_east, language: en, priority: medium }
+  - { name: "Dubai Airports (X)", handle: "DubaiAirports", type: x, route_group: middle_east, language: en, priority: high }
+
+# --- D. 亚太/东南亚中转 PVG/HKG → SIN/BKK/KUL/SGN/MNL ---
+x_asia_pacific:
+  - { name: "Cathay Cargo (X)", handle: "CathayCargo", type: x, route_group: asia_pacific, language: en, priority: high }
+  - { name: "HK Airport (X)", handle: "HKAirport", type: x, route_group: asia_pacific, language: en, priority: high }
+  - { name: "Changi Airport (X)", handle: "ChangiAirport", type: x, route_group: asia_pacific, language: en, priority: high }
+  - { name: "Thai Cargo (X)", handle: "ThaiCargo", type: x, route_group: asia_pacific, language: en, priority: medium }
+  - { name: "ANA Cargo (X)", handle: "ANACargo_jp", type: x, route_group: asia_pacific, language: en, priority: medium }
+  - { name: "Korean Air Cargo (X)", handle: "KoreanAir_Cargo", type: x, route_group: asia_pacific, language: en, priority: medium }
+
+# --- E. 订舱平台/指数/工具 ---
+x_platforms:
+  - { name: "Xeneta (X)", handle: "Xeneta", type: x, route_group: platforms, language: en, priority: high }
+  - { name: "TAC Index (X)", handle: "TAC_Index", type: x, route_group: platforms, language: en, priority: critical }
