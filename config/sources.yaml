@@ -1,0 +1,475 @@
+# LogiPulse — 国际物流日报信息源配置
+# 每个源包含: name, type(rss/web/api), url, category, language, priority
+
+# ============================================================
+# 1. 全球头部货代 / Global Head Forwarders
+# ============================================================
+global_forwarders:
+  - name: DHL Global Forwarding
+    url: https://www.dhl.com/global-en/home/our-divisions/freight/insights.html
+    type: web
+    language: en
+    priority: high
+
+  - name: Kuehne+Nagel Insights
+    url: https://home.kuehne-nagel.com/en/-/services/sea-logistics/news
+    type: web
+    language: en
+    priority: high
+
+  - name: DSV Air & Sea
+    url: https://www.dsv.com/en/insights
+    type: web
+    language: en
+    priority: high
+
+  - name: DB Schenker Logistics
+    url: https://www.dbschenker.com/global/news
+    type: web
+    language: en
+    priority: medium
+
+  - name: Bolloré Logistics
+    url: https://www.bollore-logistics.com/en/news/
+    type: web
+    language: en
+    priority: medium
+
+  - name: Expeditors
+    url: https://www.expeditors.com/insights
+    type: web
+    language: en
+    priority: medium
+
+  - name: CEVA Logistics
+    url: https://www.cevalogistics.com/en/news-and-media
+    type: web
+    language: en
+    priority: medium
+
+  - name: Nippon Express
+    url: https://www.nipponexpress.com/press/
+    type: web
+    language: en
+    priority: medium
+
+  - name: Sinotrans
+    url: https://www.sinotrans.com/col/col7429/index.html
+    type: web
+    language: zh
+    priority: high
+
+  - name: Kerry Logistics
+    url: https://www.kerrylogistics.com/media-centre/
+    type: web
+    language: en
+    priority: medium
+
+# ============================================================
+# 2. 行业协会 / Industry Associations
+# ============================================================
+industry_associations:
+  - name: IATA Cargo
+    url: https://www.iata.org/en/programs/cargo/
+    rss: https://www.iata.org/en/pressroom/rss/
+    type: rss
+    language: en
+    priority: critical
+
+  - name: IATA Economics
+    url: https://www.iata.org/en/iata-repository/publications/economic-reports/
+    type: web
+    language: en
+    priority: critical
+
+  - name: FIATA
+    url: https://fiata.org/news/
+    type: web
+    language: en
+    priority: high
+
+  - name: TIACA
+    url: https://tiaca.org/news/
+    type: web
+    language: en
+    priority: high
+
+  - name: ICAO Cargo
+    url: https://www.icao.int/sustainability/Pages/Air-Cargo-Development.aspx
+    type: web
+    language: en
+    priority: medium
+
+  - name: WTO Trade Statistics
+    url: https://www.wto.org/english/res_e/statis_e/statis_e.htm
+    type: web
+    language: en
+    priority: medium
+
+# ============================================================
+# 3. 数字化报价/订舱平台 / Digital Booking Platforms
+# ============================================================
+digital_platforms:
+  - name: cargo.one
+    url: https://www.cargo.one/blog
+    type: web
+    language: en
+    priority: high
+
+  - name: WebCargo by Freightos
+    url: https://www.webcargo.co/blog/
+    type: web
+    language: en
+    priority: high
+
+  - name: CargoAi
+    url: https://www.cargoai.co/blog
+    type: web
+    language: en
+    priority: high
+
+  - name: Freightos
+    url: https://www.freightos.com/freight-resources/
+    type: web
+    language: en
+    priority: high
+
+  - name: Flexport Blog
+    url: https://www.flexport.com/blog/
+    type: web
+    language: en
+    priority: high
+
+  - name: Xeneta
+    url: https://www.xeneta.com/blog
+    type: web
+    language: en
+    priority: high
+
+  - name: project44 Blog
+    url: https://www.project44.com/blog
+    type: web
+    language: en
+    priority: medium
+
+  - name: FourKites
+    url: https://www.fourkites.com/blog/
+    type: web
+    language: en
+    priority: medium
+
+# ============================================================
+# 4. 运价指数 & 市场数据 / Rate Indices & Market Data
+# ============================================================
+rate_indices:
+  - name: TAC Index (Air Cargo Rates)
+    url: https://www.tacindex.com/
+    type: web
+    language: en
+    priority: critical
+
+  - name: Baltic Air Freight Index
+    url: https://www.balticexchange.com/en/data-services/market-information.html
+    type: web
+    language: en
+    priority: critical
+
+  - name: Freightos Baltic Index (FBX)
+    url: https://fbx.freightos.com/
+    type: web
+    language: en
+    priority: critical
+
+  - name: Drewry Air Freight
+    url: https://www.drewry.co.uk/air-freight
+    type: web
+    language: en
+    priority: high
+
+  - name: WorldACD Market Data
+    url: https://www.worldacd.com/
+    type: web
+    language: en
+    priority: critical
+
+  - name: Clive Data Services
+    url: https://www.clivedata.com/
+    type: web
+    language: en
+    priority: high
+
+  - name: Container xChange
+    url: https://www.container-xchange.com/blog/
+    type: web
+    language: en
+    priority: medium
+
+# ============================================================
+# 5. 航空燃油价格 / Jet Fuel Prices
+# ============================================================
+fuel_prices:
+  - name: IATA Fuel Monitor
+    url: https://www.iata.org/en/publications/economics/fuel-monitor/
+    type: web
+    language: en
+    priority: critical
+
+  - name: S&P Global Platts Jet Fuel
+    url: https://www.spglobal.com/commodityinsights/en/ci/products/jet-fuel.html
+    type: web
+    language: en
+    priority: high
+
+  - name: US EIA Kerosene Jet Fuel
+    url: https://www.eia.gov/dnav/pet/pet_pri_spt_s1_d.htm
+    type: web
+    language: en
+    priority: high
+
+  - name: OPIS Jet Fuel
+    url: https://www.opisnet.com/product/pricing/spot/jet-fuel/
+    type: web
+    language: en
+    priority: medium
+
+# ============================================================
+# 6. 行业新闻 / Industry News Media
+# ============================================================
+news_media:
+  - name: Air Cargo News
+    url: https://www.aircargonews.net/
+    rss: https://www.aircargonews.net/feed/
+    type: rss
+    language: en
+    priority: critical
+
+  - name: The Loadstar
+    url: https://theloadstar.com/
+    rss: https://theloadstar.com/feed/
+    type: rss
+    language: en
+    priority: critical
+
+  - name: FreightWaves
+    url: https://www.freightwaves.com/
+    rss: https://www.freightwaves.com/feed
+    type: rss
+    language: en
+    priority: critical
+
+  - name: Air Cargo World
+    url: https://aircargoworld.com/
+    rss: https://aircargoworld.com/feed/
+    type: rss
+    language: en
+    priority: high
+
+  - name: Lloyd's List
+    url: https://www.lloydslist.com/
+    type: web
+    language: en
+    priority: high
+
+  - name: Journal of Commerce (JOC)
+    url: https://www.joc.com/
+    type: web
+    language: en
+    priority: high
+
+  - name: Supply Chain Dive
+    url: https://www.supplychaindive.com/
+    rss: https://www.supplychaindive.com/feeds/news/
+    type: rss
+    language: en
+    priority: high
+
+  - name: Cargo Facts
+    url: https://cargofacts.com/
+    type: web
+    language: en
+    priority: high
+
+  - name: STAT Trade Times
+    url: https://www.stattimes.com/
+    type: web
+    language: en
+    priority: medium
+
+  - name: 中国民航网
+    url: https://www.caacnews.com.cn/
+    type: web
+    language: zh
+    priority: high
+
+  - name: 运联智库
+    url: https://www.tucmedia.cn/
+    type: web
+    language: zh
+    priority: medium
+
+  - name: 中国物流与采购联合会
+    url: http://www.chinawuliu.com.cn/
+    type: web
+    language: zh
+    priority: high
+
+  - name: 搜航网
+    url: https://www.sofreight.com/
+    type: web
+    language: zh
+    priority: high
+
+# ============================================================
+# 7. 播客 / Podcasts
+# ============================================================
+podcasts:
+  - name: Air Cargo Podcast
+    url: https://www.aircargopodcast.com/
+    type: web
+    language: en
+    priority: medium
+
+  - name: FreightCasts
+    url: https://www.freightcasts.com/
+    type: web
+    language: en
+    priority: medium
+
+  - name: Cargo Masterminds
+    url: https://www.cargomasterminds.com/
+    type: web
+    language: en
+    priority: medium
+
+  - name: The Logistics of Logistics
+    url: https://www.thelogisticsoflogistics.com/podcast/
+    type: web
+    language: en
+    priority: medium
+
+  - name: Everything is Logistics
+    url: https://www.bfrpod.com/
+    type: web
+    language: en
+    priority: low
+
+# ============================================================
+# 8. 航空公司货运 / Airline Cargo (补充源)
+# ============================================================
+airline_cargo:
+  - name: Lufthansa Cargo
+    url: https://lufthansa-cargo.com/newsroom
+    type: web
+    language: en
+    priority: medium
+
+  - name: Emirates SkyCargo
+    url: https://www.emiratesskycargo.com/news
+    type: web
+    language: en
+    priority: medium
+
+  - name: Qatar Airways Cargo
+    url: https://www.qrcargo.com/s/News
+    type: web
+    language: en
+    priority: medium
+
+  - name: Turkish Cargo
+    url: https://www.turkishcargo.com/en/news
+    type: web
+    language: en
+    priority: medium
+
+  - name: Cathay Cargo
+    url: https://www.cathaycargo.com/en/news
+    type: web
+    language: en
+    priority: medium
+
+  - name: Singapore Airlines Cargo
+    url: https://www.siacargo.com/
+    type: web
+    language: en
+    priority: medium
+
+  - name: 中国国际货运航空 (中货航)
+    url: https://www.ckairline.com/
+    type: web
+    language: zh
+    priority: high
+
+  - name: 南航货运
+    url: https://cargo.csair.com/
+    type: web
+    language: zh
+    priority: medium
+
+  - name: 东航物流
+    url: https://www.ceairargo.com/
+    type: web
+    language: zh
+    priority: medium
+
+# ============================================================
+# 9. 社交媒体 & 社区 / Social & Community (补充源)
+# ============================================================
+social_community:
+  - name: r/logistics (Reddit)
+    url: https://www.reddit.com/r/logistics/
+    type: web
+    language: en
+    priority: medium
+
+  - name: r/freightbrokers (Reddit)
+    url: https://www.reddit.com/r/FreightBrokers/
+    type: web
+    language: en
+    priority: low
+
+  - name: LinkedIn Air Cargo
+    url: https://www.linkedin.com/feed/hashtag/aircargo/
+    type: web
+    language: en
+    priority: medium
+
+  - name: 货代圈 (微信公众号)
+    url: https://mp.weixin.qq.com/
+    type: web
+    language: zh
+    priority: medium
+    notes: 需要手动抓取或使用第三方API
+
+# ============================================================
+# 10. 政策 & 监管 / Regulatory & Policy (补充源)
+# ============================================================
+regulatory:
+  - name: US CBP (Customs and Border Protection)
+    url: https://www.cbp.gov/newsroom
+    type: web
+    language: en
+    priority: high
+
+  - name: 中国海关总署
+    url: http://www.customs.gov.cn/
+    type: web
+    language: zh
+    priority: critical
+
+  - name: EU DG TAXUD
+    url: https://taxation-customs.ec.europa.eu/news_en
+    type: web
+    language: en
+    priority: medium
+
+  - name: FAA (Federal Aviation Administration)
+    url: https://www.faa.gov/newsroom
+    type: web
+    language: en
+    priority: medium
+
+  - name: CAAC 中国民航局
+    url: https://www.caac.gov.cn/
+    type: web
+    language: zh
+    priority: high
