@@ -6,6 +6,7 @@ LogiPulse — 报告生成器 v2
 import logging
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from jinja2 import Template
 
@@ -17,7 +18,10 @@ logger = logging.getLogger(__name__)
 ZH_TEMPLATE = Template("""# LogiPulse 国际物流情报日报
 
 > **{{ date }}** · 上海时间 {{ time }} 更新
-> 信号源 {{ source_count }}+ · 这不是新闻，是你今天的作战地图
+> 本次有数据的信息源 {{ source_count }} 个
+{% if demo %}
+> **示例报告：以下内容为固定演示数据，不是当日新闻，不可用于报价或政策判断。**
+{% endif %}
 
 ---
 
@@ -185,7 +189,10 @@ ZH_TEMPLATE = Template("""# LogiPulse 国际物流情报日报
 EN_TEMPLATE = Template("""# LogiPulse — International Logistics Intelligence
 
 > **{{ date }}** · Updated {{ time }} Shanghai Time
-> {{ source_count }}+ sources · This is not news — it's your battle map
+> {{ source_count }} sources returned data in this run
+{% if demo %}
+> **DEMO: Fixed example data, not current news. Do not use for pricing or policy decisions.**
+{% endif %}
 
 ---
 
@@ -320,22 +327,24 @@ Why today: {{ m.why_now }}
 """)
 
 
-def render_zh(analysis: dict, source_count: int = 120) -> str:
-    now = datetime.now()
+def render_zh(analysis: dict, source_count: int = 0, demo: bool = False) -> str:
+    now = datetime.now(ZoneInfo("Asia/Shanghai"))
     return ZH_TEMPLATE.render(
         date=now.strftime("%Y-%m-%d"),
         time=now.strftime("%H:%M"),
         source_count=source_count,
+        demo=demo,
         analysis=analysis,
     )
 
 
-def render_en(analysis: dict, source_count: int = 120) -> str:
-    now = datetime.now()
+def render_en(analysis: dict, source_count: int = 0, demo: bool = False) -> str:
+    now = datetime.now(ZoneInfo("Asia/Shanghai"))
     return EN_TEMPLATE.render(
         date=now.strftime("%Y-%m-%d"),
         time=now.strftime("%H:%M"),
         source_count=source_count,
+        demo=demo,
         analysis=analysis,
     )
 
@@ -343,11 +352,13 @@ def render_en(analysis: dict, source_count: int = 120) -> str:
 def save_reports(
     analysis: dict,
     output_dir: str = "reports",
-    source_count: int = 120,
+    source_count: int = 0,
+    demo: bool = False,
 ) -> tuple[Path, Path]:
     """生成并保存中英文日报"""
-    today = datetime.now().strftime("%Y-%m-%d")
-    year = datetime.now().strftime("%Y")
+    now = datetime.now(ZoneInfo("Asia/Shanghai"))
+    today = now.strftime("%Y-%m-%d")
+    year = now.strftime("%Y")
 
     zh_dir = Path(output_dir) / "zh" / year
     en_dir = Path(output_dir) / "en" / year
@@ -357,8 +368,8 @@ def save_reports(
     zh_path = zh_dir / f"{today}.md"
     en_path = en_dir / f"{today}.md"
 
-    zh_content = render_zh(analysis, source_count)
-    en_content = render_en(analysis, source_count)
+    zh_content = render_zh(analysis, source_count, demo=demo)
+    en_content = render_en(analysis, source_count, demo=demo)
 
     zh_path.write_text(zh_content, encoding="utf-8")
     en_path.write_text(en_content, encoding="utf-8")

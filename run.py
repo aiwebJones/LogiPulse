@@ -258,22 +258,26 @@ async def main():
     parser.add_argument("--collect-only", action="store_true", help="仅采集数据，不分析")
     parser.add_argument("--from-cache", action="store_true", help="从缓存数据生成报告")
     parser.add_argument("--dry-run", action="store_true", help="使用示例数据生成报告（不调用AI）")
-    parser.add_argument("--output", default="reports", help="输出目录")
+    parser.add_argument("--output", help="输出目录（正式报告 reports，示例 demo-reports）")
     parser.add_argument("--config", default="config/sources.yaml", help="源配置文件路径")
     args = parser.parse_args()
 
     os.chdir(ROOT)
-    output_dir = args.output
+    output_dir = args.output or ("demo-reports" if args.dry_run else "reports")
 
     if args.dry_run:
         logger.info("=== DRY RUN: 使用示例数据生成报告 ===")
-        zh_path, en_path = save_reports(DEMO_ANALYSIS, output_dir)
+        zh_path, en_path = save_reports(DEMO_ANALYSIS, output_dir, source_count=0, demo=True)
         logger.info(f"中文日报: {zh_path}")
         logger.info(f"英文日报: {en_path}")
         print(f"\n✅ 日报已生成（示例数据）:")
         print(f"   中文: {zh_path}")
         print(f"   英文: {en_path}")
         return
+
+    if not args.collect_only and not os.environ.get("ANTHROPIC_API_KEY"):
+        logger.error("ANTHROPIC_API_KEY is required. Use --dry-run for a clearly labeled demo.")
+        sys.exit(1)
 
     # Step 1: 采集
     if args.from_cache:
@@ -296,15 +300,15 @@ async def main():
 
     # Step 2: AI 分析
     logger.info("=== Step 2/3: AI 分析 ===")
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        logger.warning("ANTHROPIC_API_KEY not set, using demo analysis")
-        analysis = DEMO_ANALYSIS
-    else:
-        analysis = analyze_items(items)
+    if not items:
+        logger.error("No source items collected; no daily report will be published.")
+        sys.exit(1)
+    analysis = analyze_items(items)
 
     # Step 3: 生成报告
     logger.info("=== Step 3/3: 生成日报 ===")
-    zh_path, en_path = save_reports(analysis, output_dir)
+    source_count = len({item.get("source") for item in items if item.get("source")})
+    zh_path, en_path = save_reports(analysis, output_dir, source_count=source_count)
 
     print(f"\n✅ LogiPulse 日报已生成:")
     print(f"   中文: {zh_path}")
