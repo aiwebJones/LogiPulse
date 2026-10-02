@@ -13,6 +13,7 @@ from anthropic import Anthropic
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 logger = logging.getLogger(__name__)
+DEFAULT_MODEL = "claude-sonnet-5-5"
 
 # ============================================================
 # 四层情报分析提示词
@@ -208,7 +209,7 @@ def analyze_items(items: list[dict]) -> dict:
         data_text = data_text[:80000] + "\n... (truncated)"
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model=os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL,
         max_tokens=12000,
         messages=[
             {
@@ -218,7 +219,9 @@ def analyze_items(items: list[dict]) -> dict:
         ],
     )
 
-    response_text = message.content[0].text
+    response_text = "\n".join(block.text for block in message.content if block.type == "text")
+    if message.stop_reason == "max_tokens":
+        raise ValueError("Analysis was truncated; refusing to publish an incomplete report")
 
     if "```json" in response_text:
         response_text = response_text.split("```json")[1].split("```")[0]
@@ -234,7 +237,7 @@ def translate_report(zh_markdown: str) -> str:
     client = create_client()
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model=os.environ.get("ANTHROPIC_MODEL") or DEFAULT_MODEL,
         max_tokens=12000,
         messages=[
             {
@@ -244,4 +247,4 @@ def translate_report(zh_markdown: str) -> str:
         ],
     )
 
-    return message.content[0].text
+    return "\n".join(block.text for block in message.content if block.type == "text")

@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 data/
+demo-reports/
 .DS_Store
 *.egg-info/
 dist/
