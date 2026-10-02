@@ -5,6 +5,11 @@ on:
     # 每天北京时间 8:00 (UTC 0:00) 生成日报
     - cron: '0 0 * * *'
   workflow_dispatch: # 支持手动触发
+    inputs:
+      publish:
+        description: '将本次日报提交到仓库（默认仅生成预览附件）'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -30,10 +35,21 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
-        run: python run.py
+        run: python run.py --output "$RUNNER_TEMP/logipulse-reports"
+
+      - name: Upload briefing for review
+        uses: actions/upload-artifact@v7
+        with:
+          name: daily-briefing-${{ github.run_id }}
+          path: ${{ runner.temp }}/logipulse-reports/
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Commit and push reports
+        if: github.event_name == 'schedule' || inputs.publish == true
         run: |
+          mkdir -p reports
+          cp -R "$RUNNER_TEMP/logipulse-reports"/. reports/
           git config user.name "LogiPulse Bot"
           git config user.email "logipulse@jones.dev"
           git add reports/

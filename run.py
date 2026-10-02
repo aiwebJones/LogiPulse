@@ -25,7 +25,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
-from src.collector import collect_all, save_raw
+from src.collector import collect_all, filter_recent_items, save_raw
 from src.analyzer import analyze_items
 from src.reporter import save_reports
 
@@ -300,8 +300,9 @@ async def main():
 
     # Step 2: AI 分析
     logger.info("=== Step 2/3: AI 分析 ===")
+    items = filter_recent_items(items)
     if not items:
-        logger.error("No source items collected; no daily report will be published.")
+        logger.error("No recent items with a verified publication timestamp; no daily report will be published.")
         sys.exit(1)
     analysis = analyze_items(items)
 

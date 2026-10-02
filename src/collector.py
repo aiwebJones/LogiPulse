@@ -5,7 +5,7 @@ LogiPulse — 信息采集器
 
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -41,7 +41,7 @@ async def fetch_url(client: httpx.AsyncClient, url: str) -> str:
 
 
 async def collect_rss(client: httpx.AsyncClient, source: dict) -> list[dict]:
-    """采集 RSS 源，返回最近 24 小时的条目"""
+    """采集 RSS 源；保留日期不明条目供原始资料核对。"""
     rss_url = source.get("rss", source["url"])
     try:
         raw = await fetch_url(client, rss_url)
@@ -50,17 +50,19 @@ async def collect_rss(client: httpx.AsyncClient, source: dict) -> list[dict]:
         return []
 
     feed = feedparser.parse(raw)
-    cutoff = datetime.now() - timedelta(hours=48)
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=48)
     items = []
 
     for entry in feed.entries[:20]:
         published = None
+        updated = None
         if hasattr(entry, "published_parsed") and entry.published_parsed:
-            published = datetime(*entry.published_parsed[:6])
-        elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
-            published = datetime(*entry.updated_parsed[:6])
+            published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+        if hasattr(entry, "updated_parsed") and entry.updated_parsed:
+            updated = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
 
-        if published and published < cutoff:
+        source_date = published or updated
+        if source_date and source_date < cutoff:
             continue
 
         summary = ""
@@ -75,6 +77,7 @@ async def collect_rss(client: httpx.AsyncClient, source: dict) -> list[dict]:
             "url": entry.get("link", ""),
             "summary": summary,
             "published": published.isoformat() if published else None,
+            "updated": updated.isoformat() if updated else None,
             "language": source.get("language", "en"),
             "priority": source.get("priority", "medium"),
         })
@@ -205,6 +208,28 @@ async def collect_all(
 
     logger.info(f"Total collected: {len(all_items)} items")
     return all_items
+
+
+def filter_recent_items(items: list[dict]) -> list[dict]:
+    """日报仅采用近48小时明确发布的资料，不把采集/更新时间当发布日期。"""
+    now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(hours=48)
+    recent = []
+    for item in items:
+        value = item.get("published")
+        if not isinstance(value, str):
+            continue
+        try:
+            published = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        # 旧版RSS缓存的无时区日期来自feedparser，按UTC解释。
+        if published.tzinfo is None:
+            published = published.replace(tzinfo=timezone.utc)
+        if cutoff <= published <= now:
+            recent.append(item)
+    logger.info(f"Recent dated items: {len(recent)}/{len(items)}; excluded undated, stale or future items")
+    return recent
 
 
 def save_raw(items: list[dict], output_dir: str = "data") -> Path:
