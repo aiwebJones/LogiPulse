@@ -223,9 +223,10 @@ def filter_recent_items(items: list[dict]) -> list[dict]:
             published = datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
             continue
-        # 旧版RSS缓存的无时区日期来自feedparser，按UTC解释。
+        # Legacy caches may have stored updated_parsed as a naive published value.
+        # Its meaning cannot be recovered reliably, so only accept timezone-aware dates.
         if published.tzinfo is None:
-            published = published.replace(tzinfo=timezone.utc)
+            continue
         if cutoff <= published <= now:
             recent.append(item)
     logger.info(f"Recent dated items: {len(recent)}/{len(items)}; excluded undated, stale or future items")
