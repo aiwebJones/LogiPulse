@@ -83,8 +83,18 @@ class ReportingTests(unittest.TestCase):
         ]
         with patch.object(collector, 'datetime', wraps=datetime) as clock:
             clock.now.return_value = now
-            self.assertEqual(collector.filter_recent_items(items), items[:3])
+            self.assertEqual(collector.filter_recent_items(items), items[:2])
         self.assertEqual(len(items), 7)
+
+    def test_legacy_cache_updated_only_naive_published_timestamp_is_rejected(self):
+        # Before the publication/update split, updated_parsed could be serialized
+        # as a recent naive "published" timestamp with no separate "updated" key.
+        legacy_cache_item = {
+            'source': 'RSS',
+            'title': 'Old article updated recently',
+            'published': datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
+        }
+        self.assertEqual(collector.filter_recent_items([legacy_cache_item]), [])
 
     def test_rss_updated_time_is_not_promoted_to_publication_time(self):
         updated = datetime.now(timezone.utc).isoformat()
