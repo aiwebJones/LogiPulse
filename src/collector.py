@@ -229,7 +229,7 @@ def filter_recent_items(items: list[dict]) -> list[dict]:
             continue
         if cutoff <= published <= now:
             recent.append(item)
-    logger.info(f"Recent dated items: {len(recent)}/{len(items)}; excluded undated, stale or future items")
+    logger.info(f"Recent dated items: {len(recent)}/{len(items)}; excluded undated, timezone-naive, stale or future items")
     return recent
 
 
